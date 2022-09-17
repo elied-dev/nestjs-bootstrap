@@ -6,16 +6,12 @@ import { config as dotenvConfig } from 'dotenv';
 export class ConfigFactory {
   public static config: IAppConfiguration = null;
 }
-//  retrieve env file
+//  retrieve env file only for dev purpose
 const importEnvironmentVariables = () => {
-  let { npm_config_region: region, npm_config_env: env } = Object.fromEntries(
-    Object.keys(process.env)
-      .filter((key) => key.startsWith('npm_config'))
-      .map((key) => [key, process.env[key]]),
-  );
+  const { npm_config_region, npm_config_env } = process.env;
 
-  region = region ? region + '.' : '';
-  env = env ? env : 'production';
+  const region = npm_config_region ? npm_config_region + '.' : '';
+  const env = npm_config_env || 'production';
 
   const envFileName = `${region}${env}.env`;
   const envFileDirectory = __dirname + '/../../env';
@@ -31,6 +27,14 @@ const getConfig = (): IAppConfiguration => {
     ConfigFactory.config = {
       nodeEnv: process.env.NODE_ENV || 'production',
       appPort: Number(process.env.APP_PORT) || 3000,
+
+      logConfig: {
+        logLevel: process.env.LOG_LEVEL || 'info',
+        prettify: process.env.LOG_PRETTIFY === 'true',
+        excludedPaths: (process.env.LOG_EXCLUDED_PATHS || '')
+          .split(',')
+          .filter((s) => s),
+      },
     };
   }
   return ConfigFactory.config;

@@ -7,7 +7,7 @@ export const routes: Routes = [
     module: HealthModule,
   },
   {
-    path: 'v1',
+    path: 'api',
     children: [],
   },
 ];
