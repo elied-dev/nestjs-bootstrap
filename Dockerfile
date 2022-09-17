@@ -3,8 +3,7 @@ FROM node:18-bullseye-slim
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-
-RUN npm i
+RUN npm install
 
 COPY . .
 
@@ -14,4 +13,4 @@ RUN apt-get install -y curl
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "start"]

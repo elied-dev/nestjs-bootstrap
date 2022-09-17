@@ -41,6 +41,6 @@ async function bootstrap() {
   //  filters
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  await app.listen(appConfig.appPort);
+  await app.listen(appConfig.appPort, '0.0.0.0');
 }
 bootstrap();

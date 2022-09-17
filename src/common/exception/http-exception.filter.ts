@@ -1,3 +1,4 @@
+import { FastifyReply, FastifyRequest } from 'fastify';
 import { AppLogger } from './../../logger/pino.logger';
 import {
   ExceptionFilter,
@@ -26,8 +27,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     { status }: { status: number },
   ) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
+    const response = ctx.getResponse<FastifyReply>();
+    const request = ctx.getRequest<FastifyRequest>();
     const { method, url } = request;
 
     const startRequestTime = ClsUtils.get('startRequestTime');
@@ -56,7 +57,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       `Request error ${requestId} - ${method} ${url}`,
     );
 
-    response.status(status).json({
+    response.code(status).send({
       statusCode: status,
       timestamp: new Date().toISOString(),
       description: exception.message,

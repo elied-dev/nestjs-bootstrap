@@ -5,69 +5,53 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Nest framework TypeScript starter repository.
+
+This unofficial starter intends to improve the [official starter code](https://github.com/nestjs/nest) by adding in it some useful tools.
 
 ## Installation
 
 ```bash
-$ npm install
+npm install
 ```
 
-## Running the app
+## Run with Docker
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+./scripts/run-docker.sh
 ```
 
-## Test
+This script allows to run the app inside a docker container.
+
+All parameters are defined in [Dockerfile](Dockerfile) and in [docker-compose.yaml](docker-compose.yaml).
+
+We can provide to this script the following arguments
+
+- `--watch`: run the app in watch mode
+- `--build`: rebuild the containers
+- `--lport`: localhost port the dockerized app should listen on (default 3000)
+- `--env` : environment to run
+- `--region` : region to run
+
+Example:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+./scripts/run-docker.sh \
+    --watch # run in watch mode
+    --build # force build
+    --cport=4002 # container internal port
+    --lport=8000 # localhost port
+    --file="new-docker.yaml" # docker compose file config
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+| Name                                      | Github Profile                                                                                                                                                                                                                             | Roles                 |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------- |
+| [Elie Drai](https://github.com/elied-dev) | [<a href="https://github.com/elied-dev" target="blank"><img align="center" src="https://avatars.githubusercontent.com/u/106579448?s=400&u=00677ff0b4eba6a517bea6bc9ac2cf37e46c4d78&v=4" height="100" /></a>](https://github.com/elied-dev) | ADMIN <br>CONTRIBUTOR |
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+Nest Starter is [MIT licensed](LICENSE).
