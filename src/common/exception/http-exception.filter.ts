@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { AppLogger } from './../../logger/pino.logger';
+import { AppLogger } from '../logger/pino.logger';
 import {
   ExceptionFilter,
   Catch,

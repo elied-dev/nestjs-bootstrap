@@ -35,6 +35,11 @@ const getConfig = (): IAppConfiguration => {
           .split(',')
           .filter((s) => s),
       },
+
+      metricsConfig: {
+        metricsPort: Number(process.env.METRICS_PORT) || 9999,
+        metricsPrefix: process.env.METRICS_PREFIX || '',
+      },
     };
   }
   return ConfigFactory.config;

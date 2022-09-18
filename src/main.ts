@@ -1,5 +1,6 @@
+import { MetricsModule } from './metrics/metrics.module';
 import { HttpExceptionFilter } from './common/exception/http-exception.filter';
-import { LoggerInterceptor } from './logger/logger.interceptor';
+import { LoggerInterceptor } from './common/logger/logger.interceptor';
 import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
@@ -11,7 +12,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from '@fastify/helmet';
 
 import { appConfig } from './config';
-import { AppLogger } from './logger/pino.logger';
+import { AppLogger } from './common/logger/pino.logger';
 
 const openApiDocumentationSetup = (app: INestApplication) => {
   const config = new DocumentBuilder()
@@ -22,6 +23,19 @@ const openApiDocumentationSetup = (app: INestApplication) => {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/spec', app, document);
 };
+
+async function bootstrapMetrics() {
+  const appMetrics = await NestFactory.create<NestFastifyApplication>(
+    MetricsModule,
+    new FastifyAdapter(),
+    {
+      logger: false,
+    },
+  );
+  appMetrics.enableCors();
+  appMetrics.register(helmet);
+  await appMetrics.listen(appConfig.metricsConfig.metricsPort);
+}
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -43,4 +57,10 @@ async function bootstrap() {
 
   await app.listen(appConfig.appPort, '0.0.0.0');
 }
-bootstrap();
+
+async function start() {
+  await bootstrap();
+  await bootstrapMetrics();
+}
+
+start();

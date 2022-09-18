@@ -17,6 +17,33 @@ This unofficial starter intends to improve the [official starter code](https://g
 npm install
 ```
 
+## Servers
+
+Two servers are running simultaneously on different ports:
+
+- app-server for the application (default port: 3000)
+- metrics-server for application metrics, exposing `getMetricsSummary` route (default port: 9999)
+
+## Run configuration
+
+The project can be executed with the following commands:
+
+```bash
+npm run start             # Default nest start
+npm run start:watch       # Running in watch mode
+npm run start:debug       # Running in debug mode
+npm run start:prod        # Running in production mode against dist folder
+```
+
+We can also provide the following parameters to npm scripts to define the environment file to import:
+
+```bash
+npm start \
+  --env=dev
+  --region=use1
+# Will use the env file 'env/use1.dev.env'
+```
+
 ## Run with Docker
 
 ```bash
@@ -30,7 +57,7 @@ All parameters are defined in [Dockerfile](Dockerfile) and in [docker-compose.ya
 We can provide to this script the following arguments
 
 - `--watch`: run the app in watch mode
-- `--build`: rebuild the containers
+- `--build`: rebuild the containers before running
 - `--lport`: localhost port the dockerized app should listen on (default 3000)
 - `--env` : environment to run
 - `--region` : region to run
@@ -41,9 +68,17 @@ Example:
 ./scripts/run-docker.sh \
     --watch # run in watch mode
     --build # force build
-    --cport=4002 # container internal port
     --lport=8000 # localhost port
-    --file="new-docker.yaml" # docker compose file config
+    --env=dev
+    --region=euc1
+```
+
+### NPM Script for docker
+
+We can use pre edited npm script for running inside docker with standard configuration.
+
+```bash
+npm run start:docker:dev
 ```
 
 ## Stay in touch

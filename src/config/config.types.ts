@@ -3,6 +3,8 @@ export interface IAppConfiguration {
   appPort: number;
 
   logConfig: ILoggingConfiguration;
+
+  metricsConfig: MetricsConfiguration;
 }
 
 export interface ILoggingConfiguration {
@@ -10,3 +12,8 @@ export interface ILoggingConfiguration {
   prettify: boolean;
   excludedPaths: string[];
 }
+
+export type MetricsConfiguration = {
+  metricsPort: number;
+  metricsPrefix: string;
+};

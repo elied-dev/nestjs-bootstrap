@@ -1,4 +1,4 @@
-import { appConfig } from './../config/index';
+import { appConfig } from '../../config/index';
 import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
 import { Observable, tap } from 'rxjs';
 import { FastifyRequest, FastifyReply } from 'fastify';

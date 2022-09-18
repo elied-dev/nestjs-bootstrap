@@ -1,4 +1,4 @@
-import { appConfig } from './../config/index';
+import { appConfig } from '../../config/index';
 import { LoggerOptions } from 'pino';
 
 const transport = appConfig.logConfig.prettify

@@ -16,5 +16,8 @@ APP_PORT="3000"
 
 LOG_LEVEL="info"
 LOG_PRETTIFY="true"
-LOG_EXCLUDED_PATHS="/health"
+LOG_EXCLUDED_PATHS="/,/health,/liveness,/readiness"
+
+METRICS_PORT="9999"
+METRICS_PREFIX=""
 ```
