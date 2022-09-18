@@ -19,13 +19,21 @@ const transport = appConfig.logConfig.prettify
     };
 
 const pinoLoggerOptions: LoggerOptions = {
+  safe: true,
   level: appConfig.logConfig.logLevel,
   messageKey: 'message',
   nestedKey: 'payload',
   transport,
-  // formatters: {
-  //   level: (level: string) => ({ level }),
-  // },
+  formatters: {
+    level: (level: string) => ({ level }),
+    log: (x: object) => x,
+    bindings: (bindings) => ({
+      pid: bindings.pid,
+      hostname: bindings.hostname,
+    }),
+  },
+  redact: [],
+  serializers: {},
 };
 
 const getTS = () => Number(process.hrtime.bigint() / 1000000n);

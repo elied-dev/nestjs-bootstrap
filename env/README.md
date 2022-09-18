@@ -3,7 +3,7 @@
 This folder should contain any environment file with the following syntax:
 
 ```nodejs
-(${region})?.${environment}.env
+(${region}.)?${environment}.env
 ```
 
 Could be `dev.env` or `use1.production.env` etc...

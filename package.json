@@ -28,6 +28,7 @@
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-fastify": "^9.0.11",
     "@nestjs/swagger": "^6.1.2",
+    "@promster/metrics": "^9.1.5",
     "cls-hooked": "^4.2.2",
     "cls-rtracer": "^2.6.2",
     "dotenv": "^16.0.2",
