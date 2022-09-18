@@ -7,7 +7,6 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
 import { ClsUtils } from '../../utils/cls/cls.utils';
 
 @Catch()

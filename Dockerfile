@@ -14,4 +14,5 @@ RUN apt-get install -y curl
 EXPOSE 3000
 EXPOSE 9999
 
-CMD ["npm", "start"]
+RUN npm run build
+CMD ["npm", "run", "start:prod"]
