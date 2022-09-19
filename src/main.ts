@@ -34,7 +34,7 @@ async function bootstrapMetrics() {
   );
   appMetrics.enableCors();
   appMetrics.register(helmet);
-  await appMetrics.listen(appConfig.metricsConfig.metricsPort);
+  await appMetrics.listen(appConfig.metricsConfig.metricsPort, '0.0.0.0');
 }
 
 async function bootstrap() {

@@ -1,12 +1,13 @@
 #!/bin/bash
 # Check if watch mode
-DOCKER_CMD="npm start"
+DOCKER_CMD="npm run start:prod"
 DOCKER_COMPOSE_RUN_COMMAND="docker compose"
 FORCE_BUILD=0
-CONTAINER_APP_PORT=3000
 LOCALHOST_APP_PORT=3000
+LOCALHOST_METRICS_PORT=9999
 DOCKER_COMPOSE_FILE="docker-compose.yml"
 ENV_FILE_NAME="dev.env"
+DOCKER_COMMAND_ARGS=""
 
 function retrieve_arg_value() {
   local arg=$1
@@ -26,13 +27,17 @@ for argument in "$@"; do
       # echo $argument
       LOCALHOST_APP_PORT=$(echo $argument | cut -d= -f2)
       ;;
+    *--mport=*)
+      # echo $argument
+      LOCALHOST_METRICS_PORT=$(echo $argument | cut -d= -f2)
+      ;;
     *--env=*)
       ENV=$(echo $argument | cut -d= -f2)
-      DOCKER_CMD="$DOCKER_CMD --env=$ENV"
+      DOCKER_COMMAND_ARGS="$DOCKER_COMMAND_ARGS --env=$ENV"
       ;;
     *--region=*)
       REGION=$(echo $argument | cut -d= -f2)
-      DOCKER_CMD="$DOCKER_CMD --region=$REGION"
+      DOCKER_COMMAND_ARGS="$DOCKER_COMMAND_ARGS --region=$REGION"
       ;;
     *)
       ;;
@@ -40,7 +45,8 @@ for argument in "$@"; do
 done
 
 export LOCALHOST_APP_PORT=$LOCALHOST_APP_PORT
-export DOCKER_CMD="$DOCKER_CMD"
+export LOCALHOST_METRICS_PORT=$LOCALHOST_METRICS_PORT
+export DOCKER_CMD="$DOCKER_CMD $DOCKER_COMMAND_ARGS"
 
 DOCKER_COMPOSE_RUN_COMMAND+=" -f $DOCKER_COMPOSE_FILE"
 

@@ -10,5 +10,7 @@ services:
       - APP_PORT=3000
       - PORT=3000
       - HOST_PORT=${LOCALHOST_APP_PORT}
+      - METRICS_PORT=${LOCALHOST_METRICS_PORT}
     ports:
       - '${LOCALHOST_APP_PORT}:3000'
+      - '${LOCALHOST_METRICS_PORT}:9999'

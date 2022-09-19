@@ -59,6 +59,7 @@ We can provide to this script the following arguments
 - `--watch`: run the app in watch mode
 - `--build`: rebuild the containers before running
 - `--lport`: localhost port the dockerized app should listen on (default 3000)
+- `--mport`: localhost port for metrics server (default 9999)
 - `--env` : environment to run
 - `--region` : region to run
 
