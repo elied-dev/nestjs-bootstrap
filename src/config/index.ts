@@ -26,7 +26,7 @@ const getConfig = (): IAppConfiguration => {
   if (ConfigFactory.config === null) {
     ConfigFactory.config = {
       nodeEnv: process.env.NODE_ENV || 'production',
-      appPort: Number(process.env.APP_PORT) || 3000,
+      appPort: Number(process.env.APP_PORT || process.env.PORT) || 3000,
 
       logConfig: {
         logLevel: process.env.LOG_LEVEL || 'info',

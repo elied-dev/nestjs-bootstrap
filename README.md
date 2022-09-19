@@ -39,7 +39,7 @@ We can also provide the following parameters to npm scripts to define the enviro
 
 ```bash
 npm start \
-  --env=dev
+  --env=dev \
   --region=use1
 # Will use the env file 'env/use1.dev.env'
 ```
