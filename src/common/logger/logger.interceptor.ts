@@ -66,7 +66,7 @@ const responseInfo = (req: FastifyRequest, res: FastifyReply, data: any) => {
   const { statusCode } = res;
   return {
     ...defaultInfo(),
-    res: { statusCode, data },
+    res: { statusCode, data, headers: res.getHeaders() },
     ...requestInfo(req),
   };
 };
