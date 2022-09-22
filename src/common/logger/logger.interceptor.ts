@@ -16,7 +16,7 @@ export class LoggerInterceptor implements NestInterceptor {
       return next.handle();
     }
 
-    const startRequestTime = Date.now();
+    const startRequestTime = process.hrtime.bigint();
     ClsUtils.set('startRequestTime', startRequestTime);
 
     const { method, url } = req;
@@ -31,7 +31,7 @@ export class LoggerInterceptor implements NestInterceptor {
       tap((data) => {
         const res: FastifyReply = context.switchToHttp().getResponse();
 
-        const endRequestTime = Date.now();
+        const endRequestTime = process.hrtime.bigint();
         ClsUtils.set('endRequestTime', endRequestTime);
 
         this.logger.info(
@@ -39,7 +39,9 @@ export class LoggerInterceptor implements NestInterceptor {
             ...responseInfo(req, res, data),
             startRequestTime,
             endRequestTime,
-            duration: endRequestTime - startRequestTime,
+            requestDuration: Number(
+              (endRequestTime - startRequestTime) / 1000000n,
+            ),
           },
           `Request completed ${requestId} - ${method} ${url}`,
         );
