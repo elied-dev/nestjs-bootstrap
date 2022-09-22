@@ -7,18 +7,18 @@ const assignLabels = (
   });
 };
 
-const CountersLabels = {
+const Counters = {
   HEALTH_REQUEST: '',
 };
-assignLabels(CountersLabels, 'counter');
+assignLabels(Counters, 'counter');
 
-const GaugesLabels = {};
-assignLabels(GaugesLabels, 'gauges');
+const Gauges = {};
+assignLabels(Gauges, 'gauges');
 
-const TimersLabels = {};
-assignLabels(TimersLabels, 'timers');
+const Timers = {};
+assignLabels(Timers, 'timers');
 
-const HistogramsLabels = {};
-assignLabels(HistogramsLabels, 'histogram');
+const Histograms = {};
+assignLabels(Histograms, 'histogram');
 
-export { CountersLabels, GaugesLabels, TimersLabels, HistogramsLabels };
+export { Counters, Gauges, Timers, Histograms };

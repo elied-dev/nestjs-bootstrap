@@ -1,46 +1,52 @@
 import { LoggerService, LogLevel } from '@nestjs/common';
-import pinoLogger, { Logger } from 'pino';
+import pinoLogger, { Logger, LoggerOptions } from 'pino';
 import { pinoLoggerOptions } from './logger.config';
 
 type CustomPinoLoggerOptions = {
-  context: string;
+  service: string;
 };
 export class PinoLogger implements LoggerService {
   private primaryLogger = pinoLogger(pinoLoggerOptions);
-  private logger: Logger = null;
-  private context: string = undefined;
+  public logger: Logger = null;
+  private service: string = undefined;
 
-  constructor(options: CustomPinoLoggerOptions = { context: undefined }) {
-    this.context = options.context || undefined;
+  constructor(options: CustomPinoLoggerOptions = { service: undefined }) {
+    this.service = options.service || undefined;
     this.logger = this.primaryLogger.child({
-      context: this.context,
+      service: this.service,
     });
+    this.child = this.logger.child;
   }
 
-  child = this.primaryLogger.child;
+  child = (
+    bindings: pinoLogger.Bindings,
+    options?: pinoLogger.ChildLoggerOptions,
+  ): pinoLogger.Logger<LoggerOptions & pinoLogger.ChildLoggerOptions> => {
+    return this.logger.child(bindings, options);
+  };
 
   log(message: any, ...optionalParams: any[]) {
-    this.logger.info(message, { context: this.context }, ...optionalParams);
+    this.logger.info(message, { context: this.service }, ...optionalParams);
   }
 
   error(message: any, ...optionalParams: any[]) {
-    this.logger.error(message, { context: this.context }, ...optionalParams);
+    this.logger.error(message, { context: this.service }, ...optionalParams);
   }
 
   warn(message: any, ...optionalParams: any[]) {
-    this.logger.warn(message, { context: this.context }, ...optionalParams);
+    this.logger.warn(message, { context: this.service }, ...optionalParams);
   }
 
   debug?(message: any, ...optionalParams: any[]) {
-    this.logger.debug(message, { context: this.context }, ...optionalParams);
+    this.logger.debug(message, { context: this.service }, ...optionalParams);
   }
 
   info(message: any, ...optionalParams: any[]) {
-    this.logger.info(message, { context: this.context }, ...optionalParams);
+    this.logger.info(message, { context: this.service }, ...optionalParams);
   }
 
   verbose?(message: any, ...optionalParams: any[]) {
-    this.logger.trace(message, { context: this.context }, ...optionalParams);
+    this.logger.trace(message, { context: this.service }, ...optionalParams);
   }
 
   setLogLevels?(levels: LogLevel[]) {
@@ -48,5 +54,5 @@ export class PinoLogger implements LoggerService {
   }
 }
 
-export const AppLogger = new PinoLogger({ context: 'app' });
-export const MetricLogger = new PinoLogger({ context: 'metrics' });
+export const AppLogger = new PinoLogger({ service: 'app' });
+export const MetricLogger = new PinoLogger({ service: 'metrics' });

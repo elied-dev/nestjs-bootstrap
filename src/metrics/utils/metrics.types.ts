@@ -1,5 +1,6 @@
 import { Prometheus } from '@promster/metrics';
-export type MetricProperties = {
+
+type MetricProperties = {
   labels: string[];
   help: string;
   buckets?: number[];
@@ -7,37 +8,48 @@ export type MetricProperties = {
   percentiles?: number[];
 };
 
-export type PrometheusMetric =
+type PrometheusMetric =
   | Prometheus.Counter
   | Prometheus.Gauge
   | Prometheus.Histogram
   | Prometheus.Summary;
 
-export type CustomMetrics = Record<string, MetricDetails>;
+type CustomMetrics = Record<string, MetricDetails>;
 
-export type MetricDetails = {
+type MetricDetails = {
   metric: PrometheusMetric;
   type: MetricTypes;
   name: string;
 };
 
-export type MetricDefinition = {
+type MetricDefinition = {
   name: string;
   type: MetricTypes;
   properties: MetricProperties;
 };
 
-export type MetricBuilderFunction = (
+type MetricBuilderFunction = (
   name: string,
   properties: MetricProperties,
   metricsPrefix: string,
 ) => PrometheusMetric;
 
-export enum MetricTypes {
+enum MetricTypes {
   COUNTER = 'counter',
   HISTOGRAM = 'histogram',
   GAUGE = 'gauge',
   SUMMARY = 'summary',
 }
 
-export type MetricLabels = Record<string, string | number>;
+type MetricLabels = Record<string, string | number>;
+
+export {
+  MetricLabels,
+  MetricTypes,
+  MetricBuilderFunction,
+  MetricDefinition,
+  MetricDetails,
+  CustomMetrics,
+  PrometheusMetric,
+  MetricProperties,
+};

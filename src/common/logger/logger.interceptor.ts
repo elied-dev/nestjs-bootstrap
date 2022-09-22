@@ -6,7 +6,7 @@ import { ClsUtils } from 'src/utils/cls/cls.utils';
 import { AppLogger } from './pino.logger';
 
 export class LoggerInterceptor implements NestInterceptor {
-  private logger = AppLogger;
+  private logger = AppLogger.logger.child({ module: LoggerInterceptor.name });
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const req: FastifyRequest = context.switchToHttp().getRequest();
 

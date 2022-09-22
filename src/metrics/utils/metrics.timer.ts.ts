@@ -23,7 +23,7 @@ export class TimerMetric {
     }
   }
 
-  public begin(labels: MetricLabels) {
+  public begin(labels: MetricLabels = {}): void {
     try {
       this.isRunning = true;
       this.endTimer = this.metric.startTimer(labels);
@@ -32,7 +32,7 @@ export class TimerMetric {
     }
   }
 
-  public stop(labels: MetricLabels = {}) {
+  public stop(labels: MetricLabels = {}): number {
     try {
       this.endTimer(labels);
       this.isRunning = false;
@@ -43,12 +43,12 @@ export class TimerMetric {
     } catch (e: any) {
       AppLogger.debug(e);
     }
-    return null;
+    return 0;
   }
 
-  public static DummyTimer: { begin: any; stop: any } = {
+  public static DummyTimer: { begin: () => void; stop: () => number } = {
     // dummy timer for error handling
-    begin: (): any => null,
-    stop: (): any => null,
+    begin: (): void => {},
+    stop: (): number => 0,
   };
 }

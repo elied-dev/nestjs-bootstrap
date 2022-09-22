@@ -1,4 +1,4 @@
-import { CountersLabels } from './metrics.constants';
+import { Counters } from './metrics.constants';
 import {
   buildCounter,
   buildHistogram,
@@ -23,7 +23,7 @@ export const metricsGlobalConfig = {
 export const metricsDefinition: MetricDefinition[] = [
   //  COUNTERS
   {
-    name: CountersLabels.HEALTH_REQUEST,
+    name: Counters.HEALTH_REQUEST,
     type: MetricTypes.COUNTER,
     properties: {
       help: 'Counter for health requests',
