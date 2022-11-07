@@ -12,11 +12,11 @@ describe('AppController', () => {
     appController = app.get<AppController>(AppController);
   });
 
-  describe('root', () => {
-    it('should return root value', () => {
-      expect(appController.getRoot()).toEqual({
-        message: 'Nothing to see here (app)',
-      });
+  describe('Test root controller', () => {
+    it('should return root message', () => {
+      expect(appController.getRoot().message).toEqual(
+        'Nothing to see here (app)',
+      );
     });
   });
 });

@@ -31,7 +31,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const { method, url } = request;
 
     const startRequestTime = ClsUtils.get('startRequestTime');
-    const endRequestTime = Date.now();
+    const endRequestTime = process.hrtime.bigint();
     ClsUtils.set('endRequestTime', endRequestTime);
 
     const requestId = ClsUtils.get('requestId');
@@ -43,6 +43,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
             type: exception.type,
             message: exception.message,
             stack: exception.stack,
+            response: {
+              statusCode: status,
+              message: exception.message,
+            },
           };
 
     AppLogger.error(
@@ -62,6 +66,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       description: exception.message,
       path: request.url,
       requestId,
+      message: exception.response.message,
     });
   }
 }

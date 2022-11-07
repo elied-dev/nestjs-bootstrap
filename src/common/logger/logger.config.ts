@@ -26,7 +26,7 @@ const pinoLoggerOptions: LoggerOptions = {
   transport,
   formatters: {
     level: (level: string) => ({ level }),
-    log: (x: object) => x,
+    log: (x: Record<string, unknown>) => x,
     bindings: (bindings) => ({
       pid: bindings.pid,
       hostname: bindings.hostname,

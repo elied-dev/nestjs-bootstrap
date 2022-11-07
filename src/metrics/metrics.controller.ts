@@ -9,9 +9,10 @@ export class MetricsController {
   constructor(private readonly metricsService: MetricsService) {}
 
   @Get()
-  getRoot(): { message: string } {
+  getRoot(): { message: string; timestamp: string } {
     return {
       message: 'Nothing to see here (metrics)',
+      timestamp: new Date().toISOString(),
     };
   }
 

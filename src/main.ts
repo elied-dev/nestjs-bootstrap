@@ -2,14 +2,14 @@ import { MetricsService } from './metrics/metrics.service';
 import { MetricsModule } from './metrics/metrics.module';
 import { HttpExceptionFilter } from './common/exception/http-exception.filter';
 import { LoggerInterceptor } from './common/logger/logger.interceptor';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { SwaggerModule, DocumentBuilder, OpenAPIObject } from '@nestjs/swagger';
 import helmet from '@fastify/helmet';
 
 import { appConfig } from './config';
@@ -17,6 +17,19 @@ import { AppLogger } from './common/logger/pino.logger';
 
 import { plugin as promsterPlugin } from '@promster/fastify';
 import Fastify from 'fastify';
+import { writeFileSync } from 'fs';
+import { stringify as YamlStringify } from 'json-to-pretty-yaml';
+
+const openApiSpecificationWriteFiles = (document: OpenAPIObject) => {
+  writeFileSync(
+    __dirname + '/../../oas/swaggers/swagger.yaml',
+    YamlStringify(document),
+  );
+  writeFileSync(
+    __dirname + '/../../oas/swaggers/swagger.json',
+    JSON.stringify(document, null, 2),
+  );
+};
 
 const openApiDocumentationSetup = (app: INestApplication) => {
   const config = new DocumentBuilder()
@@ -25,7 +38,9 @@ const openApiDocumentationSetup = (app: INestApplication) => {
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
+
   SwaggerModule.setup('api/spec', app, document);
+  openApiSpecificationWriteFiles(document);
 };
 
 async function bootstrapMetrics() {
@@ -71,12 +86,15 @@ async function bootstrap() {
   //  filters
   app.useGlobalFilters(new HttpExceptionFilter());
 
+  // validation
+  app.useGlobalPipes(new ValidationPipe());
+
   await app.listen(appConfig.appPort, '0.0.0.0');
 }
 
 async function start() {
-  await bootstrap();
   await bootstrapMetrics();
+  await bootstrap();
 }
 
 start();
