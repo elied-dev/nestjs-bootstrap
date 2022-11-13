@@ -8,11 +8,7 @@ type MetricProperties = {
   percentiles?: number[];
 };
 
-type PrometheusMetric =
-  | Prometheus.Counter
-  | Prometheus.Gauge
-  | Prometheus.Histogram
-  | Prometheus.Summary;
+type PrometheusMetric = Prometheus.Counter | Prometheus.Gauge | Prometheus.Histogram | Prometheus.Summary;
 
 type CustomMetrics = Record<string, MetricDetails>;
 
@@ -28,11 +24,7 @@ type MetricDefinition = {
   properties: MetricProperties;
 };
 
-type MetricBuilderFunction = (
-  name: string,
-  properties: MetricProperties,
-  metricsPrefix: string,
-) => PrometheusMetric;
+type MetricBuilderFunction = (name: string, properties: MetricProperties, metricsPrefix: string) => PrometheusMetric;
 
 enum MetricTypes {
   COUNTER = 'counter',

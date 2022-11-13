@@ -1,9 +1,5 @@
 import { TimerMetric } from './utils/metrics.timer.ts';
-import {
-  CustomMetrics,
-  MetricDetails,
-  MetricTypes,
-} from './utils/metrics.types';
+import { CustomMetrics, MetricDetails, MetricTypes } from './utils/metrics.types';
 import { appConfig } from './../config/index';
 import { getSummary, Prometheus } from '@promster/metrics';
 
@@ -13,6 +9,9 @@ import { metricsBuilders, metricsDefinition } from './utils/metrics.config';
 export class MetricsService {
   private static metricsPrefix = appConfig.metricsConfig.metricsPrefix;
   private static _customMetrics: CustomMetrics = undefined;
+  private static logger = MetricLogger.logger.child({
+    service: MetricsService.name,
+  });
 
   async getMetrics() {
     return getSummary();
@@ -26,11 +25,7 @@ export class MetricsService {
           return [
             metric.name,
             {
-              metric: builder(
-                metric.name,
-                metric.properties,
-                this.metricsPrefix,
-              ),
+              metric: builder(metric.name, metric.properties, this.metricsPrefix),
               type: metric.type,
               name: metric.name,
             },
@@ -43,77 +38,70 @@ export class MetricsService {
 
   private static getMetric(name: string): MetricDetails {
     const metricInfo = this.getCustomMetrics()[name];
-    this.checkExistsMetric(metricInfo);
+    this.checkExistsMetric(metricInfo, name);
     return metricInfo;
   }
 
-  private static checkExistsMetric(metricDetails: MetricDetails) {
+  private static checkExistsMetric(metricDetails: MetricDetails, name: string) {
     if (!metricDetails) {
-      throw new Error('Metric ' + metricDetails.name + ' not found');
+      throw new Error('Metric ' + name + ' not found');
     }
   }
 
-  private static checkMetricType(
-    metricDetails: MetricDetails,
-    types: MetricTypes[],
-  ) {
+  private static checkMetricType(metricDetails: MetricDetails, types: MetricTypes[]) {
     if (!types.includes(metricDetails.type)) {
       throw new Error(
-        'Metric ' +
-          metricDetails.name +
-          ' type is ' +
-          metricDetails.type +
-          ' and should be one of ' +
-          types.join(', '),
+        'Metric ' + metricDetails.name + ' type is ' + metricDetails.type + ' and should be one of ' + types.join(', '),
       );
     }
   }
 
-  public static async inc(
-    metricName: string,
-    labels: Record<string, any> = {},
-  ) {
+  public static async inc(metricName: string, labels: Record<string, any> = {}) {
     try {
       const metricDetails = this.getMetric(metricName);
-      this.checkMetricType(metricDetails, [
-        MetricTypes.COUNTER,
-        MetricTypes.GAUGE,
-      ]);
-      MetricLogger.debug('Incremented');
-      (metricDetails.metric as Prometheus.Gauge | Prometheus.Counter).inc(
-        labels,
-      );
-    } catch (e: any) {
-      MetricLogger.debug(e);
+      this.checkMetricType(metricDetails, [MetricTypes.COUNTER, MetricTypes.GAUGE]);
+      this.logger.debug('Incremented metric: ' + metricName);
+      (metricDetails.metric as Prometheus.Gauge | Prometheus.Counter).inc(labels);
+    } catch (error) {
+      const { message } = error;
+      this.logger.error({ error: { message } }, 'Failed to increment metric: ' + metricName);
     }
   }
 
-  public static async dec(
-    metricName: string,
-    labels: Record<string, any> = {},
-  ) {
+  public static async dec(metricName: string, labels: Record<string, any> = {}) {
     try {
       const metricDetails = this.getMetric(metricName);
       this.checkMetricType(metricDetails, [MetricTypes.GAUGE]);
+      this.logger.debug('Decremented metric: ' + metricName);
       (metricDetails.metric as Prometheus.Gauge).dec(labels);
-    } catch (e: any) {
-      MetricLogger.debug(e);
+    } catch (error) {
+      const { message } = error;
+      this.logger.error({ error: { message } }, 'Failed to decrement metric: ' + metricName);
     }
   }
 
-  public static startTimer(
-    metricName: string,
-    labels: Record<string, any> = {},
-  ) {
+  public static startTimer(metricName: string, labels: Record<string, any> = {}) {
     try {
       const metricDetails = this.getMetric(metricName);
       this.checkMetricType(metricDetails, [MetricTypes.HISTOGRAM]);
+      this.logger.debug('Started timer: ' + metricName);
       return new TimerMetric(metricDetails.metric as Prometheus.Histogram, {
         startImmediately: true,
         labels,
       });
-    } catch (e: any) {
-      MetricLogger.debug(e);
+    } catch (error) {
+      const { message } = error;
+      this.logger.error({ error: { message } }, 'Failed to start timer metric: ' + metricName);
+    }
+    return TimerMetric.DummyTimer;
+  }
+
+  public static stopTimer(timerMetric: TimerMetric, labels: Record<string, any> = {}) {
+    try {
+      timerMetric.stop(labels);
+    } catch (error) {
+      const { message } = error;
+      this.logger.error({ error: { message } }, 'Failed to stop timer');
     }
     return TimerMetric.DummyTimer;
   }

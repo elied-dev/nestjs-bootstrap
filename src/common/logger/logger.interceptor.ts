@@ -1,3 +1,4 @@
+import { ClsKeys } from './../../utils/cls/cls.constants';
 import { appConfig } from '../../config/index';
 import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
 import { Observable, tap } from 'rxjs';
@@ -17,31 +18,26 @@ export class LoggerInterceptor implements NestInterceptor {
     }
 
     const startRequestTime = process.hrtime.bigint();
-    ClsUtils.set('startRequestTime', startRequestTime);
+    ClsUtils.set(ClsKeys.START_REQUEST_TIME, startRequestTime);
 
     const { method, url } = req;
-    const requestId = ClsUtils.get('requestId');
+    const requestId = ClsUtils.get(ClsKeys.REQUEST_ID);
 
-    this.logger.info(
-      { ...requestInfo(req), startRequestTime },
-      `Request started ${requestId} - ${method} ${url}`,
-    );
+    this.logger.info({ ...requestInfo(req), startRequestTime }, `Request started ${requestId} - ${method} ${url}`);
 
     return next.handle().pipe(
       tap((data) => {
         const res: FastifyReply = context.switchToHttp().getResponse();
 
         const endRequestTime = process.hrtime.bigint();
-        ClsUtils.set('endRequestTime', endRequestTime);
+        ClsUtils.set(ClsKeys.END_REQUEST_TIME, endRequestTime);
 
         this.logger.info(
           {
             ...responseInfo(req, res, data),
             startRequestTime,
             endRequestTime,
-            requestDuration: Number(
-              (endRequestTime - startRequestTime) / 1000000n,
-            ),
+            requestDuration: Number((endRequestTime - startRequestTime) / 1000000n),
           },
           `Request completed ${requestId} - ${method} ${url}`,
         );
@@ -52,7 +48,7 @@ export class LoggerInterceptor implements NestInterceptor {
 
 const defaultInfo = () => {
   return {
-    requestId: ClsUtils.get('requestId'),
+    requestId: ClsUtils.get(ClsKeys.REQUEST_ID),
   };
 };
 

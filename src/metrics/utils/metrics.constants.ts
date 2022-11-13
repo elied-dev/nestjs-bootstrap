@@ -1,7 +1,4 @@
-const assignLabels = (
-  metricObject: { [x: string]: string },
-  suffix: string,
-) => {
+const assignLabels = (metricObject: { [x: string]: string }, suffix: string) => {
   Object.keys(metricObject).forEach((key: string) => {
     metricObject[key] = `${key.toLowerCase()}_${suffix}`;
   });

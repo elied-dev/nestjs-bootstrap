@@ -5,10 +5,7 @@ import { LoggerInterceptor } from './common/logger/logger.interceptor';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { SwaggerModule, DocumentBuilder, OpenAPIObject } from '@nestjs/swagger';
 import helmet from '@fastify/helmet';
 
@@ -20,22 +17,18 @@ import Fastify from 'fastify';
 import { writeFileSync } from 'fs';
 import { stringify as YamlStringify } from 'json-to-pretty-yaml';
 
+import * as openapiConfigValues from '../openapi/config.json';
+
 const openApiSpecificationWriteFiles = (document: OpenAPIObject) => {
-  writeFileSync(
-    __dirname + '/../../oas/swaggers/swagger.yaml',
-    YamlStringify(document),
-  );
-  writeFileSync(
-    __dirname + '/../../oas/swaggers/swagger.json',
-    JSON.stringify(document, null, 2),
-  );
+  writeFileSync(__dirname + '/../../openapi/openapi-specification.yaml', YamlStringify(document));
+  writeFileSync(__dirname + '/../../openapi/openapi-specification.json', JSON.stringify(document, null, 2));
 };
 
 const openApiDocumentationSetup = (app: INestApplication) => {
   const config = new DocumentBuilder()
-    .setTitle('NestJS Bootstrap Project')
-    .setDescription('Bootstrap for quick setup in NestJS')
-    .setVersion('1.0')
+    .setTitle(openapiConfigValues.app_name)
+    .setDescription(openapiConfigValues.app_description)
+    .setVersion(openapiConfigValues.app_version)
     .build();
   const document = SwaggerModule.createDocument(app, config);
 
@@ -44,13 +37,9 @@ const openApiDocumentationSetup = (app: INestApplication) => {
 };
 
 async function bootstrapMetrics() {
-  const appMetrics = await NestFactory.create<NestFastifyApplication>(
-    MetricsModule,
-    new FastifyAdapter(),
-    {
-      logger: false,
-    },
-  );
+  const appMetrics = await NestFactory.create<NestFastifyApplication>(MetricsModule, new FastifyAdapter(), {
+    logger: false,
+  });
   appMetrics.enableCors();
   appMetrics.register(helmet);
   await appMetrics.listen(appConfig.metricsConfig.metricsPort, '0.0.0.0');
@@ -68,11 +57,9 @@ const appFastifyInstance = () => {
 };
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter(appFastifyInstance()),
-    { logger: AppLogger },
-  );
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(appFastifyInstance()), {
+    logger: AppLogger,
+  });
   openApiDocumentationSetup(app);
 
   //  global middlewares

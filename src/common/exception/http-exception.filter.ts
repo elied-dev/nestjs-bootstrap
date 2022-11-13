@@ -1,40 +1,28 @@
+import { ClsKeys } from './../../utils/cls/cls.constants';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { AppLogger } from '../logger/pino.logger';
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 import { ClsUtils } from '../../utils/cls/cls.utils';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
-    const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    const status = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
 
     this.catchException(exception, host, { status });
   }
 
-  catchException(
-    exception: any,
-    host: ArgumentsHost,
-    { status }: { status: number },
-  ) {
+  catchException(exception: any, host: ArgumentsHost, { status }: { status: number }) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<FastifyReply>();
     const request = ctx.getRequest<FastifyRequest>();
     const { method, url } = request;
 
-    const startRequestTime = ClsUtils.get('startRequestTime');
+    const startRequestTime = ClsUtils.get(ClsKeys.START_REQUEST_TIME) || process.hrtime.bigint();
     const endRequestTime = process.hrtime.bigint();
-    ClsUtils.set('endRequestTime', endRequestTime);
+    ClsUtils.set(ClsKeys.END_REQUEST_TIME, endRequestTime);
 
-    const requestId = ClsUtils.get('requestId');
+    const requestId = ClsUtils.get(ClsKeys.REQUEST_ID);
 
     const formattedException =
       exception instanceof HttpException
@@ -66,7 +54,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       description: exception.message,
       path: request.url,
       requestId,
-      message: exception.response.message,
+      message: exception.response?.message || exception.message,
     });
   }
 }

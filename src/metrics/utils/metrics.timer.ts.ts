@@ -14,10 +14,7 @@ export class TimerMetric {
   private durationTime: bigint = null;
   private endTimer: (labels?: Partial<MetricLabels>) => number = null;
 
-  constructor(
-    private metric: Prometheus.Histogram,
-    options: TimerMetricOptions,
-  ) {
+  constructor(private metric: Prometheus.Histogram, options: TimerMetricOptions) {
     if (options.startImmediately) {
       this.begin(options.labels || {});
     }

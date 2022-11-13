@@ -31,9 +31,7 @@ const getConfig = (): IAppConfiguration => {
       logConfig: {
         logLevel: process.env.LOG_LEVEL || 'info',
         prettify: process.env.LOG_PRETTIFY === 'true',
-        excludedPaths: (process.env.LOG_EXCLUDED_PATHS || '')
-          .split(',')
-          .filter((s) => s),
+        excludedPaths: (process.env.LOG_EXCLUDED_PATHS || '').split(',').filter((s) => s),
       },
 
       metricsConfig: {

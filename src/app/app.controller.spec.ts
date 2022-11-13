@@ -14,9 +14,7 @@ describe('AppController', () => {
 
   describe('Test root controller', () => {
     it('should return root message', () => {
-      expect(appController.getRoot().message).toEqual(
-        'Nothing to see here (app)',
-      );
+      expect(appController.getRoot().message).toEqual('Nothing to see here (app)');
     });
   });
 });

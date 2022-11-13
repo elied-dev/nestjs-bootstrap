@@ -36,6 +36,4 @@ const pinoLoggerOptions: LoggerOptions = {
   serializers: {},
 };
 
-const getTS = () => Number(process.hrtime.bigint() / 1000000n);
-
-export { getTS, pinoLoggerOptions };
+export { pinoLoggerOptions };
