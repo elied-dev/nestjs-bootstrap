@@ -82,6 +82,42 @@ We can use pre edited npm script for running inside docker with standard configu
 npm run start:docker:dev
 ```
 
+## Metrics
+
+All metrics are available by default on port 9999 at the endpoint `/metrics`.
+
+To add a new custom metric the following steps are needed:
+
+* Add the metric name into the file <a href="/src/metrics/utils/metrics.constants.ts">/src/metrics/utils/metrics.constants.ts</a>
+
+```typescript
+const Counters = {
+  NEW_METRIC_HERE: '',
+};
+```
+
+* Add the metric definition into the file <a href="/src/metrics/utils/metrics.config.ts">/src/metrics/utils/metrics.config.ts</a>
+
+```typescript
+export const metricsDefinition: MetricDefinition[] = [
+  //  COUNTERS
+  {
+    name: Counters.NEW_METRIC_HERE,
+    type: MetricTypes.COUNTER,
+    properties: {
+      help: 'Counter for new metric',
+      labels: [],
+    },
+  }
+];
+```
+
+There are 4 types of metrics:
+- COUNTER
+- GAUGE
+- HISTOGRAM
+- TIMER (kind of histogram)
+
 ## Stay in touch
 
 | Name                                      | Github Profile                                                                                                                                                                                                                             | Roles                 |
