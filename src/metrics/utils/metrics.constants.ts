@@ -1,4 +1,5 @@
 import { appConfig } from './../../config/index';
+import { MetricTypes } from './metrics.types';
 enum CounterMetric {
   HEALTH_REQUEST,
 }
@@ -9,19 +10,19 @@ enum HistogramMetric {}
 const config = [
   {
     enumMetric: CounterMetric,
-    suffix: '_counter',
+    suffix: `_${MetricTypes.COUNTER}`,
   },
   {
     enumMetric: GaugeMetric,
-    suffix: '_gauge',
+    suffix: `_${MetricTypes.GAUGE}`,
   },
   {
     enumMetric: TimerMetric,
-    suffix: '_timer',
+    suffix: `_timer`,
   },
   {
     enumMetric: HistogramMetric,
-    suffix: '_histogram',
+    suffix: `_${MetricTypes.HISTOGRAM}`,
   },
 ];
 
@@ -33,13 +34,13 @@ const createObject = (metricEnum: any, suffix: string) => {
   );
 };
 
-const [Counters, Gauges, Timers, Histograms] = config.map(({ enumMetric, suffix }) =>
-  createObject(enumMetric, suffix),
-) as [
+const metricNamesBuilder = config.map(({ enumMetric, suffix }) => createObject(enumMetric, suffix)) as [
   Record<keyof typeof CounterMetric, string>,
   Record<keyof typeof GaugeMetric, string>,
   Record<keyof typeof TimerMetric, string>,
   Record<keyof typeof HistogramMetric, string>,
 ];
+
+const [Counters, Gauges, Timers, Histograms] = metricNamesBuilder;
 
 export { Counters, Gauges, Timers, Histograms };
