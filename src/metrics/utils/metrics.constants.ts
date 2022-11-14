@@ -1,3 +1,4 @@
+import { appConfig } from './../../config/index';
 enum CounterMetric {
   HEALTH_REQUEST,
 }
@@ -8,19 +9,19 @@ enum HistogramMetric {}
 const config = [
   {
     enumMetric: CounterMetric,
-    suffix: 'counter',
+    suffix: '_counter',
   },
   {
     enumMetric: GaugeMetric,
-    suffix: 'gauge',
+    suffix: '_gauge',
   },
   {
     enumMetric: TimerMetric,
-    suffix: 'timer',
+    suffix: '_timer',
   },
   {
     enumMetric: HistogramMetric,
-    suffix: 'histogram',
+    suffix: '_histogram',
   },
 ];
 
@@ -28,7 +29,7 @@ const createObject = (metricEnum: any, suffix: string) => {
   return Object.fromEntries(
     Object.keys(metricEnum)
       .filter((key) => isNaN(parseInt(key)))
-      .map((key) => [key, `${key.toLowerCase()}_${suffix}`]),
+      .map((key) => [key, `${appConfig.metricsConfig.metricsPrefix}${key.toLowerCase()}${suffix}`]),
   );
 };
 

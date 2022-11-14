@@ -24,7 +24,7 @@ type MetricDefinition = {
   properties: MetricProperties;
 };
 
-type MetricBuilderFunction = (name: string, properties: MetricProperties, metricsPrefix: string) => PrometheusMetric;
+type MetricBuilderFunction = (name: string, properties: MetricProperties) => PrometheusMetric;
 
 enum MetricTypes {
   COUNTER = 'counter',

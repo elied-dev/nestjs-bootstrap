@@ -7,28 +7,20 @@ const getDefaultHelpDescription = (metricType: MetricTypes, name: string, isTime
 
 const defaultLabels = ['event', 'success'];
 
-const buildCounter: MetricBuilderFunction = (
-  name: string,
-  properties: MetricProperties,
-  metricsPrefix: string,
-): Prometheus.Counter => {
+const buildCounter: MetricBuilderFunction = (name: string, properties: MetricProperties): Prometheus.Counter => {
   const { labels: metricLabels = [], help: metricHelp = null } = properties;
 
   const labelNames = [...defaultLabels, ...new Set([...metricLabels])];
   const help = metricHelp ? metricHelp : getDefaultHelpDescription(MetricTypes.COUNTER, name);
 
   return new Prometheus.Counter({
-    name: `${metricsPrefix}${name}`,
+    name,
     labelNames,
     help,
   });
 };
 
-const buildGauge: MetricBuilderFunction = (
-  name: string,
-  properties: MetricProperties,
-  metricsPrefix: string,
-): Prometheus.Gauge => {
+const buildGauge: MetricBuilderFunction = (name: string, properties: MetricProperties): Prometheus.Gauge => {
   const { labels: metricLabels = [], help: metricHelp = null } = properties;
 
   const labelNames = [...defaultLabels, ...new Set([...metricLabels])];
@@ -36,17 +28,13 @@ const buildGauge: MetricBuilderFunction = (
   const help = metricHelp ? metricHelp : getDefaultHelpDescription(MetricTypes.GAUGE, name);
 
   return new Prometheus.Gauge({
-    name: `${metricsPrefix}${name}`,
+    name,
     labelNames,
     help,
   });
 };
 
-const buildHistogram: MetricBuilderFunction = (
-  name: string,
-  properties: MetricProperties,
-  metricsPrefix: string,
-): Prometheus.Histogram => {
+const buildHistogram: MetricBuilderFunction = (name: string, properties: MetricProperties): Prometheus.Histogram => {
   const {
     labels: metricLabels = [],
     buckets: metricBuckets = null,
@@ -60,18 +48,14 @@ const buildHistogram: MetricBuilderFunction = (
   const help = metricHelp ? metricHelp : getDefaultHelpDescription(MetricTypes.HISTOGRAM, name, isTimerMetric);
 
   return new Prometheus.Histogram({
-    name: `${metricsPrefix}${name}`,
+    name,
     labelNames,
     buckets,
     help,
   });
 };
 
-const buildSummary: MetricBuilderFunction = (
-  name: string,
-  properties: MetricProperties,
-  metricsPrefix: string,
-): Prometheus.Summary => {
+const buildSummary: MetricBuilderFunction = (name: string, properties: MetricProperties): Prometheus.Summary => {
   const {
     labels: metricLabels = [],
     percentiles: metricPercentiles,
@@ -85,7 +69,7 @@ const buildSummary: MetricBuilderFunction = (
   const help = metricHelp ? metricHelp : getDefaultHelpDescription(MetricTypes.HISTOGRAM, name, isTimerMetric);
 
   return new Prometheus.Summary({
-    name: `${metricsPrefix}${name}`,
+    name,
     labelNames,
     percentiles,
     help,
