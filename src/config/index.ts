@@ -14,7 +14,7 @@ const importEnvironmentVariables = () => {
   const env = npm_config_env || 'production';
 
   const envFileName = `${region}${env}.env`;
-  const envFileDirectory = __dirname + '/../../env';
+  const envFileDirectory = __dirname + '/../../../env';
 
   dotenvConfig({
     path: join(envFileDirectory, envFileName),

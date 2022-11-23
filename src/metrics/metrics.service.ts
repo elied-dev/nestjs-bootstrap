@@ -25,7 +25,7 @@ export class MetricsService {
           return [
             metric.name,
             {
-              metric: builder(metric.name, metric.properties, this.metricsPrefix),
+              metric: builder(metric.name, metric.properties),
               type: metric.type,
               name: metric.name,
             },
