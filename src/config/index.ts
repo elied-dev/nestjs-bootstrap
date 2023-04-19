@@ -1,10 +1,10 @@
-import { IAppConfiguration } from './config.types';
+import { AppConfiguration } from './config.types';
 
 import { join } from 'path';
 import { config as dotenvConfig } from 'dotenv';
 
 export class ConfigFactory {
-  public static config: IAppConfiguration = null;
+  public static config: AppConfiguration = null;
 }
 //  retrieve env file only for dev purpose
 const importEnvironmentVariables = () => {
@@ -21,7 +21,7 @@ const importEnvironmentVariables = () => {
   });
 };
 
-const getConfig = (): IAppConfiguration => {
+const getConfig = (): AppConfiguration => {
   importEnvironmentVariables();
   if (ConfigFactory.config === null) {
     ConfigFactory.config = {

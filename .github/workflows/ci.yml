@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+    branches:
+      - master
+      - release*
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      ROOT_DIR: .
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js .nvmrc version
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: ${{ env.ROOT_DIR }}/.nvmrc
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    env:
+      ROOT_DIR: .
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js .nvmrc version
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: ${{ env.ROOT_DIR }}/.nvmrc
+
+      - name: Install NPM dependencies
+        run: npm install --save-dev
+
+      - name: Run Tests and Coverage
+        id: test-coverage
+        run: npm run test:cov
+
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    env:
+      ROOT_DIR: .
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js .nvmrc version
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: ${{ env.ROOT_DIR }}/.nvmrc
+
+      - name: Install NPM dependencies
+        run: npm install --save-dev
+
+      - name: Run E2E Tests
+        run: npm run test:e2e

@@ -1,0 +1,86 @@
+{
+  "rules": [
+    {
+      "channel": "Production",
+      "match": "master",
+      "exact": true,
+      "prerelease": false,
+      "bump": true,
+      "changelog": true,
+      "commit": true,
+      "tag": true
+    },
+    {
+      "channel": "Release",
+      "match": "^release[0-9a-zA-Z_-]+$",
+      "exact": false,
+      "prerelease": true,
+      "bump": false,
+      "changelog": false,
+      "commit": false,
+      "tag": false,
+      "label": "rc"
+    },
+    {
+      "channel": "Dev",
+      "match": "^dev-[0-9a-zA-Z_-]+$",
+      "exact": false,
+      "prerelease": true,
+      "bump": false,
+      "changelog": false,
+      "commit": false,
+      "tag": false
+    }
+  ],
+  "config": {
+    "types": [
+      {
+        "type": "feat",
+        "section": "Features"
+      },
+      {
+        "type": "fix",
+        "section": "Bug Fixes"
+      },
+      {
+        "type": "chore",
+        "section": "Changes"
+      },
+      {
+        "type": "docs",
+        "section": "Changes"
+      },
+      {
+        "type": "style",
+        "section": "Changes",
+        "hidden": true
+      },
+      {
+        "type": "refactor",
+        "section": "Changes",
+        "hidden": true
+      },
+      {
+        "type": "perf",
+        "section": "Changes",
+        "hidden": true
+      },
+      {
+        "type": "test",
+        "section": "Tests",
+        "hidden": true
+      },
+      {
+        "type": "build",
+        "section": "Build System",
+        "hidden": false
+      },
+      {
+        "type": "ci",
+        "section": "CI/CD",
+        "hidden": false
+      }
+    ],
+    "releaseCommitMessageFormat": "chore(release): Upgraded version {{currentTag}}"
+  }
+}

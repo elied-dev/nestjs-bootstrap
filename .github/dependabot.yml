@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://json.schemastore.org/dependabot-2.0.json
+
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: master
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: fix(deps)
+    labels:
+      - dependencies

@@ -1,14 +1,46 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Counters } from 'src/metrics/utils/metrics.constants';
-import { MetricsService } from 'src/metrics/metrics.service';
+import { HealthService } from './health.service';
 
-@ApiTags('Health')
+export enum AppStatus {
+  OK = 'OK',
+  NOK = 'NOK',
+}
+export type HealthResponse = { status: AppStatus; message: string };
+
 @Controller()
+@ApiTags('Health')
 export class HealthController {
-  @Get()
-  async health(): Promise<{ message: string }> {
-    MetricsService.inc(Counters.HEALTH_REQUEST);
-    return { message: 'OK' };
+  constructor(private readonly healthService: HealthService) {}
+
+  @Get('/health')
+  async getHealth(): Promise<HealthResponse> {
+    if (await this.healthService.isHealthy()) {
+      return {
+        status: AppStatus.OK,
+        message: 'App is healthy',
+      };
+    }
+    throw new Error('App unhealthy');
+  }
+  @Get('/readiness')
+  async getReadiness(): Promise<HealthResponse> {
+    if (await this.healthService.isReady()) {
+      return {
+        status: AppStatus.OK,
+        message: 'App is ready',
+      };
+    }
+    throw new Error('App is not ready');
+  }
+  @Get('/liveness')
+  async getLiveness(): Promise<HealthResponse> {
+    if (await this.healthService.isLive()) {
+      return {
+        status: AppStatus.OK,
+        message: 'App is live',
+      };
+    }
+    throw new Error('App is not live');
   }
 }

@@ -1,36 +1,42 @@
-import { MetricsModule } from './metrics/metrics.module';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import helmet from '@fastify/helmet';
 
+import { setupServerConfiguration, getAppFastifyInstance } from './config/server.config';
+import { setupOpenapiConfiguration } from './config/openapi.config';
 import { appConfig } from './config';
-import { AppLogger } from './common/logger/pino.logger';
+import { PinoLoggerService } from './utils/logger/pino-logger.service';
+import { MetricsServerModule } from './metrics/server/metrics-server.module';
+import { signalIsUp } from '@promster/fastify';
 
-import { addGlobalMiddlewares, appFastifyInstance } from './fastify.config';
-import { openApiDocumentationSetup } from './openapi.config';
-
-async function bootstrapMetrics() {
-  const appMetrics = await NestFactory.create<NestFastifyApplication>(MetricsModule, new FastifyAdapter(), {
-    logger: false,
+async function bootstrapApp() {
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(getAppFastifyInstance()), {
+    logger: PinoLoggerService.AppLogger.addProperties({ operation: 'APP_INIT' }),
   });
-  appMetrics.enableCors();
-  appMetrics.register(helmet);
-  await appMetrics.listen(appConfig.metricsConfig.metricsPort, '0.0.0.0');
-}
+  setupServerConfiguration(app);
+  setupOpenapiConfiguration(app);
 
-async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(appFastifyInstance()), {
-    logger: AppLogger,
-  });
-  openApiDocumentationSetup(app);
-  addGlobalMiddlewares(app);
   await app.listen(appConfig.appPort, '0.0.0.0');
 }
 
+async function bootstrapMetricsApp() {
+  const app = await NestFactory.create<NestFastifyApplication>(
+    MetricsServerModule,
+    new FastifyAdapter(getAppFastifyInstance()),
+    {
+      logger: false,
+    },
+  );
+
+  await app.listen(appConfig.metricsConfig.metricsPort, '0.0.0.0');
+}
+
 async function start() {
-  await bootstrapMetrics();
-  await bootstrap();
+  await bootstrapMetricsApp();
+  await bootstrapApp();
+
+  //  set up metric to 1
+  signalIsUp();
 }
 
 start();

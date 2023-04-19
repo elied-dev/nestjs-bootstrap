@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  short-url-builder:
+    image: "${ECR_REPOSITORY}:latest"
+    build:
+      context: .
+      dockerfile: "./${DOCKER_FILENAME}"
+      args:
+        - COMMIT_SHA1
+        - GH_TOKEN

@@ -1,13 +1,13 @@
-export interface IAppConfiguration {
+export interface AppConfiguration {
   nodeEnv: string;
   appPort: number;
 
-  logConfig: ILoggingConfiguration;
+  logConfig: LoggingConfiguration;
 
   metricsConfig: MetricsConfiguration;
 }
 
-export interface ILoggingConfiguration {
+export interface LoggingConfiguration {
   logLevel: string;
   prettify: boolean;
   excludedPaths: string[];
